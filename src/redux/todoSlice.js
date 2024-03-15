@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  todos: [],
+  todos: JSON.parse(localStorage.getItem("to-do-history")) || [],
 };
 
 const todoSlice = createSlice({
@@ -16,18 +16,22 @@ const todoSlice = createSlice({
         priority: "Low",
       };
       state.todos.push(newTodo);
+      localStorage.setItem("to-do-history", JSON.stringify(state.todos));
     },
     toggleTodo: (state, action) => {
       const todo = state.todos.find((todo) => todo.id === action.payload);
       if (todo) {
         todo.completed = !todo.completed;
       }
+      localStorage.setItem("to-do-history", JSON.stringify(state.todos));
     },
     removeTodo: (state, action) => {
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);
+      localStorage.setItem("to-do-history", JSON.stringify(state.todos));
     },
     clearCompleted: (state) => {
       state.todos = state.todos.filter((todo) => !todo.completed);
+      localStorage.setItem("to-do-history", JSON.stringify(state.todos));
     },
     setPriority: (state, action) => {
       const { id, priority } = action.payload;
@@ -35,6 +39,7 @@ const todoSlice = createSlice({
       if (todo) {
         todo.priority = priority;
       }
+      localStorage.setItem("to-do-history", JSON.stringify(state.todos));
     },
   },
 });
